@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using FGHelper.FileHelpers;
+using FGHelper.Projects;
 using NDesk.Options;
 
 namespace MagicTableMaker
@@ -77,8 +79,6 @@ namespace MagicTableMaker
 
             var project = new Project
             {
-                SourceFilePath = source,
-                OutputFilePath = outputPath,
                 FileName = filename,
                 Name = projectName,
                 Author = author,
@@ -87,9 +87,11 @@ namespace MagicTableMaker
                 Release = release
             };
 
-            var runner = new ProjectRunner(project);
+            project = ProjectRunner.RunFileBasedProject(project, source);
 
-            runner.Run();
+            var result = FileWriter.WriteModFile(project, outputPath);
+
+            Console.WriteLine($"Process complete.  File output: {result}");
         }
 
         private static void ShowHelpScreen()
